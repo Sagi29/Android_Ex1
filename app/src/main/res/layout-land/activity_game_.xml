@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Game_Activity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+       <ProgressBar
+            android:id="@+id/game_PRB_player1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_IMG_bird"
+            android:layout_marginLeft="53dp"
+            android:maxWidth="96dp"
+            android:minWidth="96dp"
+
+            android:progress="100"
+            android:max="100"
+            android:min="0"
+            android:progressTint="@android:color/holo_green_light"/>
+
+
+        <!--<TextView
+            android:id="@+id/game_LBL_life_player1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_IMG_bird"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:text="100">
+        </TextView>-->
+
+        <ImageView
+            android:id="@+id/game_IMG_bird"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/bird">
+
+        </ImageView>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toRightOf="@id/game_IMG_bird"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="90dp">
+
+            <Button
+                android:id="@+id/game_BTN_high_attack_player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="player1_HighAttack"
+                android:text="Attack 1"/>
+            <Button
+                android:id="@+id/game_BTN_medium_attack_player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:tag="player1_MediumAttack"
+                android:text="Attack 2"/>
+
+            <Button
+                android:id="@+id/game_BTN_low_attack_player1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:tag="player1_LowAttack"
+                android:text="Attack 3"/>
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/game_IMG_pig"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:src="@drawable/pig"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="40dp"
+            >
+
+        </ImageView>
+
+       <ProgressBar
+            android:id="@+id/game_PRB_player2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_IMG_pig"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="53dp"
+
+            android:maxWidth="96dp"
+            android:minWidth="96dp"
+            android:progress="100"
+            android:max="100"
+            android:min="0"
+            android:progressTint="@android:color/holo_green_light"/>
+
+
+        <!--<TextView
+            android:id="@+id/game_LBL_life_player2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/game_IMG_pig"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="90dp"
+            android:layout_marginTop="30dp"
+            android:textSize="20sp"
+            android:text="100">
+        </TextView>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@id/game_IMG_pig"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="90dp">
+
+            <Button
+                android:id="@+id/game_BTN_high_attack_player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="player2_HighAttack"
+                android:text="Attack 1"/>
+            <Button
+                android:id="@+id/game_BTN_medium_attack_player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:tag="player2_MediumAttack"
+                android:text="Attack 2"/>
+
+            <Button
+                android:id="@+id/game_BTN_low_attack_player2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:tag="player2_LowAttack"
+                android:text="Attack 3"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

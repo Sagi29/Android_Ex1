@@ -2,15 +2,12 @@ package com.example.exercise_1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -19,8 +16,6 @@ public class Game_Activity extends AppCompatActivity {
 
 
     private  int attackLevel = 0;
-
-
     private ImageView game_IMG_bird;
     private ImageView game_IMG_pig;
     private Button game_BTN_high_attack_player1;
@@ -29,13 +24,11 @@ public class Game_Activity extends AppCompatActivity {
     private Button game_BTN_high_attack_player2;
     private Button game_BTN_medium_attack_player2;
     private Button game_BTN_low_attack_player2;
+    private ProgressBar game_ProgressBar_player1;
+    private ProgressBar game_ProgressBar_player2;
 
+    private boolean isPlayer_1_Turn = true;
 
-     private ProgressBar game_ProgressBar_player1;
-     private ProgressBar game_ProgressBar_player2;
-    private boolean isPlayer_1_Turn = false;
-    //player 1 = -1 , player 2 = 1
-    //private int playerTurn = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +56,6 @@ public class Game_Activity extends AppCompatActivity {
         game_BTN_high_attack_player2.setOnClickListener(buttonAttackClick);
         game_BTN_medium_attack_player2.setOnClickListener(buttonAttackClick);
         game_BTN_low_attack_player2.setOnClickListener(buttonAttackClick);
-
-
-
-
     }
 
     private View.OnClickListener buttonAttackClick = new View.OnClickListener() {
@@ -103,7 +92,6 @@ public class Game_Activity extends AppCompatActivity {
 
 
     private void manageGame(){
-
 
         if(isPlayer_1_Turn) {
             game_ProgressBar_player2.setProgress(game_ProgressBar_player2.getProgress() - attackLevel);
@@ -148,5 +136,4 @@ public class Game_Activity extends AppCompatActivity {
         game_BTN_low_attack_player2.setEnabled(false);
 
     }
-
 }

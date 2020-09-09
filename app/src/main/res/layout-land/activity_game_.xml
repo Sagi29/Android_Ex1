@@ -10,18 +10,6 @@
         android:layout_height="match_parent">
 
 
-
-        <FrameLayout
-            android:id="@+id/game_LAY_rollDice"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </FrameLayout>
-
-
-
-
        <ProgressBar
             android:id="@+id/game_PRB_player1"
             style="?android:attr/progressBarStyleHorizontal"
@@ -141,7 +129,13 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/game_LAY_rollDice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
+        </FrameLayout>
     </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

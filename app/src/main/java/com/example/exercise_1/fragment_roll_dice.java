@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.Random;
 
@@ -68,4 +69,12 @@ public class fragment_roll_dice extends Fragment {
         game_IMG_dice2 = view.findViewById(R.id.game_IMG_dice2);
     }
 
+    public void onBackPressed(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            super.onStop();
+        }
+    }
 }

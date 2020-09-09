@@ -12,7 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_centerInParent="true">
+        android:layout_centerInParent="true"
+        android:background="#DA400F">
+
 
         <ImageView
             android:id="@+id/game_IMG_dice1"

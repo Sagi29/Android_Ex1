@@ -1,8 +1,10 @@
 package com.example.exercise_1;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +23,7 @@ import java.util.TimerTask;
 
 
 
-public class
-Game_Activity extends AppCompatActivity {
+public class Game_Activity extends AppCompatActivity {
 
 
     private  int attackLevel = 0;
@@ -39,6 +40,7 @@ Game_Activity extends AppCompatActivity {
     private boolean isPlayer_1_Turn = true;
 
 
+    private  String theWinner;
     private long startTime = 0L;
     private Timer timer;
     private int randomAttack;
@@ -85,6 +87,7 @@ Game_Activity extends AppCompatActivity {
         game_BTN_low_attack_player2.setOnClickListener(buttonAttackClick);
 
         initFragment();
+        startTheGame();
 
    /*      runnable = new Runnable() {
             @Override
@@ -101,7 +104,21 @@ Game_Activity extends AppCompatActivity {
             }
         };
 */
-        //handler.postDelayed(runnable,1000);
+
+    }
+
+    private void startTheGame() {
+        removeFragmentRoll();
+        handler.postDelayed(runnable,1000);
+    }
+
+    private void removeFragmentRoll() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.game_LAY_rollDice);
+        if(fragment != null){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.remove(fragment);
+            transaction.commit();
+        }
     }
 
     private void initFragment() {
@@ -111,6 +128,7 @@ Game_Activity extends AppCompatActivity {
         transaction.commit();
         Log.d("ptt","IN initFragment");
     }
+
 
     private void startRepeatingTask() {
         handler.post(runnable);
@@ -194,9 +212,37 @@ Game_Activity extends AppCompatActivity {
             stepsCountForPlayer2++;
         }
         if(game_ProgressBar_player1.getProgress() == 0 || game_ProgressBar_player2.getProgress() == 0)
-            onStop();
+            //onStop();
+            gameEnd();
         else
             manageButton();
+    }
+
+    private void gameEnd() {
+
+        //TODO save WINNER + STEPS data
+        Intent intent = new Intent(Game_Activity.this, Activity_result.class);
+        startActivity(intent);
+        if(stepsCountForPlayer1 > stepsCountForPlayer2) {
+            theWinner = "Player 1";
+            intent.putExtra(Activity_result.WINNER_NAME,stepsCountForPlayer1);
+        }
+        else {
+            theWinner = "Player 2";
+            intent.putExtra(Activity_result.STEPS_NUMBER,stepsCountForPlayer2);
+        }
+        intent.putExtra("winner",theWinner);
+
+        isGameOver = true;
+
+        /*game_BTN_high_attack_player1.setEnabled(false);
+        game_BTN_medium_attack_player1.setEnabled(false);
+        game_BTN_low_attack_player1.setEnabled(false);
+
+        game_BTN_high_attack_player2.setEnabled(false);
+        game_BTN_medium_attack_player2.setEnabled(false);
+        game_BTN_low_attack_player2.setEnabled(false);*/
+        finish();
     }
 
     private void manageButton(){
@@ -211,26 +257,4 @@ Game_Activity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        String winner;
-        if(stepsCountForPlayer1 > stepsCountForPlayer2)
-            winner = "Player 1";
-        else
-            winner = "Player 2";
-        Toast.makeText(this, ("Game Over --- the winner is: " + winner + " By " + stepsCountForPlayer1 + " steps"), Toast.LENGTH_LONG).show();
-        isGameOver = true;
-
-        game_BTN_high_attack_player1.setEnabled(false);
-        game_BTN_medium_attack_player1.setEnabled(false);
-        game_BTN_low_attack_player1.setEnabled(false);
-
-        game_BTN_high_attack_player2.setEnabled(false);
-        game_BTN_medium_attack_player2.setEnabled(false);
-        game_BTN_low_attack_player2.setEnabled(false);
-
-
-
-    }
 }

@@ -16,7 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,6 +42,9 @@ public class Game_Activity extends AppCompatActivity {
     private boolean isPlayer_1_Turn = true;
 
 
+    private MySP mySP;
+    private Player player_1;
+    private Player player_2;
     private  String theWinner;
     private long startTime = 0L;
     private Timer timer;
@@ -59,14 +64,17 @@ public class Game_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_);
 
+        mySP = new MySP(this);
 
 
         findViewsByID();
         timer =  new Timer();
         random = new Random();
+        player_1 = new Player("Bird");
+        player_2 = new Player("Pig");
         manageButton();
 
-        Log.d("ptt","Befor Random = ");
+
         Glide
                .with(this)
                .load(R.drawable.bird)
@@ -86,10 +94,11 @@ public class Game_Activity extends AppCompatActivity {
         game_BTN_medium_attack_player2.setOnClickListener(buttonAttackClick);
         game_BTN_low_attack_player2.setOnClickListener(buttonAttackClick);
 
-        initFragment();
-        startTheGame();
+        //initFragment();
 
-   /*      runnable = new Runnable() {
+
+
+         runnable = new Runnable() {
             @Override
             public void run() {
 
@@ -100,16 +109,16 @@ public class Game_Activity extends AppCompatActivity {
                 if(isGameOver)
                     handler.removeCallbacks(runnable);
                 else
-                    handler.postDelayed(this,1000);
+                    handler.postDelayed(this,300);
             }
         };
-*/
 
+        startTheGame();
     }
 
     private void startTheGame() {
-        removeFragmentRoll();
-        handler.postDelayed(runnable,1000);
+        //removeFragmentRoll();
+        handler.postDelayed(runnable,300);
     }
 
     private void removeFragmentRoll() {
@@ -220,20 +229,40 @@ public class Game_Activity extends AppCompatActivity {
 
     private void gameEnd() {
 
+
+        Intent intent = new Intent(this, Activity_result.class);
+
+
         //TODO save WINNER + STEPS data
-        Intent intent = new Intent(Game_Activity.this, Activity_result.class);
-        startActivity(intent);
-        if(stepsCountForPlayer1 > stepsCountForPlayer2) {
-            theWinner = "Player 1";
-            intent.putExtra(Activity_result.WINNER_NAME,stepsCountForPlayer1);
+        ArrayList<TopTen> score = new ArrayList<>();
+        TopTen top10;
+        Gson gson = new Gson();
+
+
+
+        if(stepsCountForPlayer1 >= stepsCountForPlayer2) {
+            top10 = new TopTen(33.33,-13.52,System.currentTimeMillis(),stepsCountForPlayer1);
+            score.add(top10);
+            player_1.setScores(score);
+            String json = gson.toJson(player_1);
+            mySP.putString("player_1",json);
+            theWinner = player_1.getName();
+            intent.putExtra(Activity_result.STEPS_NUMBER,stepsCountForPlayer1);
         }
         else {
-            theWinner = "Player 2";
+
+            top10 = new TopTen(33.33,-13.52,System.currentTimeMillis(),stepsCountForPlayer2);
+            score.add(top10);
+            player_2.setScores(score);
+            String json = gson.toJson(player_2);
+            mySP.putString("player_2",json);
+            theWinner = player_2.getName();
             intent.putExtra(Activity_result.STEPS_NUMBER,stepsCountForPlayer2);
         }
-        intent.putExtra("winner",theWinner);
-
+        intent.putExtra(Activity_result.WINNER_NAME,theWinner);
         isGameOver = true;
+
+        startActivity(intent);
 
         /*game_BTN_high_attack_player1.setEnabled(false);
         game_BTN_medium_attack_player1.setEnabled(false);

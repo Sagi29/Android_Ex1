@@ -26,7 +26,7 @@ public class Activity_result extends AppCompatActivity {
         String winner = getIntent().getStringExtra(WINNER_NAME);
         int steps = getIntent().getIntExtra(STEPS_NUMBER,0);
 
-        result_TXT_resultGame.setText("The Winner is: " + winner + " In " + steps + "Steps");
+        result_TXT_resultGame.setText("The Winner is: " + winner + " In " + steps + " Steps");
 
         result_BTN_backToMenu.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -46,8 +46,8 @@ public class Activity_result extends AppCompatActivity {
     }
 
     private void findViewsByID() {
-        result_BTN_top10.findViewById(R.id.result_BTN_top10);
-        result_BTN_backToMenu.findViewById(R.id.result_BTN_backToMenu);
-        result_TXT_resultGame.findViewById(R.id.result_TXT_resultGame);
+        result_BTN_top10 = findViewById(R.id.result_BTN_top10);
+        result_BTN_backToMenu = findViewById(R.id.result_BTN_backToMenu);
+        result_TXT_resultGame = findViewById(R.id.result_TXT_resultGame);
     }
 }

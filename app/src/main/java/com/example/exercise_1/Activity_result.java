@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,18 +17,17 @@ public class Activity_result extends AppCompatActivity {
     private Button result_BTN_top10;
     private Button result_BTN_backToMenu;
     private TextView result_TXT_resultGame;
-
+    private String winner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+
         findViewsByID();
-        String winner = getIntent().getStringExtra(WINNER_NAME);
+        winner = getIntent().getStringExtra(WINNER_NAME);
         int steps = getIntent().getIntExtra(STEPS_NUMBER,0);
-
         result_TXT_resultGame.setText("The Winner is: " + winner + " In " + steps + " Steps");
-
         result_BTN_backToMenu.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -39,15 +39,17 @@ public class Activity_result extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Activity_result.this, activity_record.class);
+                intent.putExtra(Activity_result.WINNER_NAME,winner);
                 startActivity(intent);
+                finish();
             }
         });
 
     }
 
     private void findViewsByID() {
+        result_TXT_resultGame = findViewById(R.id.result_TXT_resultGame);
         result_BTN_top10 = findViewById(R.id.result_BTN_top10);
         result_BTN_backToMenu = findViewById(R.id.result_BTN_backToMenu);
-        result_TXT_resultGame = findViewById(R.id.result_TXT_resultGame);
     }
 }

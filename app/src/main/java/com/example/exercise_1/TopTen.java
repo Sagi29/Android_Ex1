@@ -53,4 +53,13 @@ public class TopTen {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return
+                "lat= " + lat +
+                ", lon= " + lon +
+                ", timestamp= " + timestamp +
+                ", numOfMoves= " + numOfMoves +
+                '}';
+    }
 }

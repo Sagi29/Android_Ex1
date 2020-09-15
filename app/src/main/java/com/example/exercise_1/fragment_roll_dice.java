@@ -26,6 +26,12 @@ public class fragment_roll_dice extends Fragment {
     private ImageView game_IMG_dice1;
     private ImageView game_IMG_dice2;
 
+    private int value1;
+    private int value2;
+    private CallBack_GameActivity callBack_gameActivity;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -39,16 +45,29 @@ public class fragment_roll_dice extends Fragment {
             @Override
             public void onClick(View view) {
                 roll();
+                Log.d("ptt","IN FRAGMANT !!!!!   value1 = "+ value1+"value2 = "+value2);
+                if(value1 != value2)
+                    getResult();
+
             }
         });
 
         return view;
     }
 
+    private void getResult() {
+        if (callBack_gameActivity != null) {
+            callBack_gameActivity.rollResult(value1,value2);
+        }
+        else
+            Log.d("ptt","callBack_gameActivity is NULL   !!!!! ");
+        this.onHiddenChanged(false);
+    }
+
     private void roll() {
 
-        int value1 = randomDiceValue();
-        int value2 = randomDiceValue();
+        value1 = randomDiceValue();
+        value2 = randomDiceValue();
 
         int res1 = getResources().getIdentifier("dice_" + value1, "drawable",this.getActivity().getPackageName());
         int res2 = getResources().getIdentifier("dice_" + value2, "drawable",this.getActivity().getPackageName());
@@ -76,5 +95,9 @@ public class fragment_roll_dice extends Fragment {
         } else {
             super.onStop();
         }
+    }
+
+    public void setActivityCallBack(CallBack_GameActivity callBack_gameActivity){
+        this.callBack_gameActivity = callBack_gameActivity;
     }
 }

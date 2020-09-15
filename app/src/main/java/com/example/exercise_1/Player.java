@@ -9,6 +9,7 @@ public class Player {
 
     private String name;
     private ArrayList<TopTen> scores;
+    private  TopTen tt;
     public Player() { }
 
     public Player(String name) {
@@ -29,11 +30,12 @@ public class Player {
     }
 
     public Player setScores(ArrayList<TopTen> scores) {
-        this.scores = scores;
+
         if(scores.size() > 10) {
-            TopTen tt = Collections.min(scores, new TtComp());
+            TopTen tt = Collections.max(scores, new TtComp());
             scores.remove(tt);
         }
+        this.scores = scores;
         return this;
     }
 }
@@ -42,8 +44,8 @@ class TtComp implements Comparator<TopTen> {
 
 public int compare(TopTen tt1, TopTen tt2) {
     if(tt1.getNumOfMoves() > tt2.getNumOfMoves())
-            return 1;
-        else
             return 0;
+        else
+            return 1;
 }
 }

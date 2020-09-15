@@ -23,6 +23,7 @@
         </Button>
 
         <TextView
+            android:id="@+id/record_TXT_score_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SCORE List:"
@@ -30,7 +31,7 @@
             android:layout_above="@id/record_EDT_recordList"
             android:textColor="#591AE6"
             android:layout_marginBottom="7dp"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@id/record_BTN_menu"
             >
 
 
@@ -38,14 +39,14 @@
 
         <EditText
             android:id="@+id/record_EDT_recordList"
-            android:layout_width="140dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
             android:lines="10"
             android:textSize="14dp"
             android:background="#57FF4901"
-            android:enabled="false"
-            android:text="">
+            android:enabled="false">
             
         </EditText>
 

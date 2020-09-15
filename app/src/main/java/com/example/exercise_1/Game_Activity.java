@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.BoringLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +27,7 @@ import java.util.TimerTask;
 
 
 
-public class Game_Activity extends AppCompatActivity {
+public class Game_Activity extends AppCompatActivity implements CallBack_GameActivity{
 
 
     public static final String PLAYER_1 = "PLAYER_1";
@@ -47,6 +48,8 @@ public class Game_Activity extends AppCompatActivity {
     private boolean isPlayer_1_Turn = true;
 
 
+    private fragment_roll_dice roll;
+    private Boolean start = false;
     private ArrayList<TopTen> scoresArrayListPlayer_1;
     private ArrayList<TopTen> scoresArrayListPlayer_2;
     private MySP mySP;
@@ -102,7 +105,7 @@ public class Game_Activity extends AppCompatActivity {
         game_BTN_medium_attack_player2.setOnClickListener(buttonAttackClick);
         game_BTN_low_attack_player2.setOnClickListener(buttonAttackClick);
 
-        //initFragment();
+        initFragment();
 
 
         runnable = new Runnable() {
@@ -110,7 +113,7 @@ public class Game_Activity extends AppCompatActivity {
             public void run() {
 
                 randomAttack = random.nextInt(3);
-                Log.d("ptt", "After Random = " + randomAttack);
+                //Log.d("ptt", "After Random = " + randomAttack);
                 clickButton();
 
                 if (isGameOver)
@@ -120,28 +123,35 @@ public class Game_Activity extends AppCompatActivity {
             }
         };
 
-        startTheGame();
+
+
     }
 
     private void retrieveData() {
         Gson gson = new Gson();
 
-        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        SharedPreferences loginPreferences = getSharedPreferences("MY_SP", MODE_PRIVATE);
         if (loginPreferences.contains(PLAYER_1)) { //How can I ask here?
             String p1_string = mySP.getString(PLAYER_1,"");
-            Player p1 =gson.fromJson(p1_string, Player.class);
+            player_1 =gson.fromJson(p1_string, Player.class);
+            scoresArrayListPlayer_1 = player_1.getScores();
+            Log.d("ptt","In retrieveData PLAYER1");
         }
         else{
             player_1 = new Player("Bird");
             scoresArrayListPlayer_1 = new ArrayList<TopTen>();
+            Log.d("ptt","In retrieveData NEW !! PLAYER1");
         }
             if(loginPreferences.contains(PLAYER_2)){
                 String p2_string = mySP.getString(PLAYER_2,"");
-                Player p2 =gson.fromJson(p2_string, Player.class);
+                player_2 =gson.fromJson(p2_string, Player.class);
+                scoresArrayListPlayer_2 = player_2.getScores();
+                Log.d("ptt","In retrieveData PLAYER2");
             }
             else {
                 player_2 = new Player("Pig");
                 scoresArrayListPlayer_2 = new ArrayList<TopTen>();
+                Log.d("ptt","In retrieveData NEW !! PLAYER2");
             }
     }
 
@@ -160,7 +170,8 @@ public class Game_Activity extends AppCompatActivity {
     }
 
     private void initFragment() {
-        fragment_roll_dice roll = new fragment_roll_dice();
+        roll = new fragment_roll_dice();
+        roll.setActivityCallBack(this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_LAY_rollDice, roll);
         transaction.commit();
@@ -267,7 +278,9 @@ public class Game_Activity extends AppCompatActivity {
             theWinner = player_1.getName();
             intent.putExtra(Activity_result.STEPS_NUMBER,stepsCountForPlayer1);
             top10 = new TopTen(33.33,-13.52,System.currentTimeMillis(),stepsCountForPlayer1);
+            Log.d("ptt","Befor add " + scoresArrayListPlayer_1.size());
             scoresArrayListPlayer_1.add(top10);
+            Log.d("ptt","AFter add " + scoresArrayListPlayer_1.size());
             player_1.setScores(scoresArrayListPlayer_1);
             String json = gson.toJson(player_1);
             mySP.putString(PLAYER_1,json);
@@ -300,4 +313,22 @@ public class Game_Activity extends AppCompatActivity {
 
         }
 
+        public void getRollDice(){
+
+        }
+
+    @Override
+    public void rollResult(int r1, int r2) {
+        if(r1 > r2)
+            isPlayer_1_Turn = true;
+        else
+            isPlayer_1_Turn = false;
+
+        Log.d("ptt","r1 = "+ r1+"r2 = "+r2);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().hide(roll);
+        transaction.commit();
+        Log.d("ptt","start =  "+ start);
+        startTheGame();
+    }
 }

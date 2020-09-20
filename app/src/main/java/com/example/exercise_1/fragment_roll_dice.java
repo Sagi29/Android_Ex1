@@ -30,8 +30,6 @@ public class fragment_roll_dice extends Fragment {
     private int value2;
     private CallBack_GameActivity callBack_gameActivity;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -45,7 +43,6 @@ public class fragment_roll_dice extends Fragment {
             @Override
             public void onClick(View view) {
                 roll();
-                Log.d("ptt","IN FRAGMANT !!!!!   value1 = "+ value1+"value2 = "+value2);
                 if(value1 != value2)
                     getResult();
 
@@ -60,7 +57,6 @@ public class fragment_roll_dice extends Fragment {
             callBack_gameActivity.rollResult(value1,value2);
         }
         else
-            Log.d("ptt","callBack_gameActivity is NULL   !!!!! ");
         this.onHiddenChanged(false);
     }
 

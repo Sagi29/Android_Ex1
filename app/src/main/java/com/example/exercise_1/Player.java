@@ -32,7 +32,7 @@ public class Player {
     public Player setScores(ArrayList<TopTen> scores) {
 
         if(scores.size() > 10) {
-            TopTen tt = Collections.max(scores, new TtComp());
+            TopTen tt = Collections.min(scores, new TtComp());
             scores.remove(tt);
         }
         this.scores = scores;

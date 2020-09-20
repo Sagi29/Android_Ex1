@@ -50,6 +50,29 @@
             
         </EditText>
 
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+            <FrameLayout
+                android:id="@+id/record_LAY_googleMap"
+                android:layout_width="220dp"
+                android:layout_height="270dp"
+                android:layout_alignParentRight="true">
+
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/record_map"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" >
+                </com.google.android.gms.maps.MapView>
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+
     </RelativeLayout>
 
 

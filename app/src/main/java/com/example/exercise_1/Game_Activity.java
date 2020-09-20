@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.BoringLayout;
@@ -30,9 +31,9 @@ import java.util.TimerTask;
 public class Game_Activity extends AppCompatActivity implements CallBack_GameActivity{
 
 
-    public static final String PLAYER_1 = "PLAYER_1";
-    public static final String PLAYER_2 = "PLAYER_2";
-
+    public static final String PLAYER_1_NAME = "PLAYER_1";
+    public static final String PLAYER_2_NAME = "PLAYER_2";
+    public static final String ACTIVITY_NAME = "GAME";
 
     private int attackLevel = 0;
     private ImageView game_IMG_bird;
@@ -62,12 +63,12 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
     Handler handler = new Handler();
     private Runnable runnable;
     private boolean isGameOver = false;
-    //private fragment_roll_dice fragmentRoll;
 
     private int stepsCountForPlayer1 = 0;
     private int stepsCountForPlayer2 = 0;
     private Random random;
 
+   private Sound_App sound_app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +77,17 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
 
         mySP = new MySP(this);
 
+        sound_app = new Sound_App();
+        sound_app.setBird_sound(MediaPlayer.create(Game_Activity.this,R.raw.birds));
+        sound_app.setPig_sound(MediaPlayer.create(Game_Activity.this,R.raw.pig));
+        sound_app.setWin_sound(MediaPlayer.create(Game_Activity.this,R.raw.win));
+
+
 
         findViewsByID();
         timer = new Timer();
         random = new Random();
-
         retrieveData();
-
         manageButton();
 
 
@@ -107,67 +112,49 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
 
         initFragment();
 
-
         runnable = new Runnable() {
             @Override
             public void run() {
-
+                
                 randomAttack = random.nextInt(3);
-                //Log.d("ptt", "After Random = " + randomAttack);
                 clickButton();
 
                 if (isGameOver)
                     handler.removeCallbacks(runnable);
                 else
-                    handler.postDelayed(this, 300);
+                    handler.postDelayed(this, 2000);
             }
         };
-
-
-
     }
 
     private void retrieveData() {
         Gson gson = new Gson();
 
         SharedPreferences loginPreferences = getSharedPreferences("MY_SP", MODE_PRIVATE);
-        if (loginPreferences.contains(PLAYER_1)) { //How can I ask here?
-            String p1_string = mySP.getString(PLAYER_1,"");
+        if (loginPreferences.contains(PLAYER_1_NAME)) {
+            String p1_string = mySP.getString(PLAYER_1_NAME,"");
             player_1 =gson.fromJson(p1_string, Player.class);
             scoresArrayListPlayer_1 = player_1.getScores();
-            Log.d("ptt","In retrieveData PLAYER1");
         }
         else{
             player_1 = new Player("Bird");
             scoresArrayListPlayer_1 = new ArrayList<TopTen>();
-            Log.d("ptt","In retrieveData NEW !! PLAYER1");
         }
-            if(loginPreferences.contains(PLAYER_2)){
-                String p2_string = mySP.getString(PLAYER_2,"");
+            if(loginPreferences.contains(PLAYER_2_NAME)){
+                String p2_string = mySP.getString(PLAYER_2_NAME,"");
                 player_2 =gson.fromJson(p2_string, Player.class);
                 scoresArrayListPlayer_2 = player_2.getScores();
-                Log.d("ptt","In retrieveData PLAYER2");
             }
             else {
                 player_2 = new Player("Pig");
                 scoresArrayListPlayer_2 = new ArrayList<TopTen>();
-                Log.d("ptt","In retrieveData NEW !! PLAYER2");
             }
     }
 
     private void startTheGame() {
-        //removeFragmentRoll();
-        handler.postDelayed(runnable, 300);
+        handler.postDelayed(runnable, 2000);
     }
 
-    private void removeFragmentRoll() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.game_LAY_rollDice);
-        if (fragment != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.remove(fragment);
-            transaction.commit();
-        }
-    }
 
     private void initFragment() {
         roll = new fragment_roll_dice();
@@ -175,17 +162,6 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.game_LAY_rollDice, roll);
         transaction.commit();
-        Log.d("ptt", "IN initFragment");
-    }
-
-
-    private void startRepeatingTask() {
-        handler.post(runnable);
-    }
-
-    private void stopRepeatingTask() {
-        handler.removeCallbacks(runnable);
-        Log.d("ptt", "STOP HANDLER");
     }
 
     private void clickButton() {
@@ -247,12 +223,15 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
     private void manageGame() {
 
         if (isPlayer_1_Turn) {
+            sound_app.getBird_sound().start();
             game_ProgressBar_player2.setProgress(game_ProgressBar_player2.getProgress() - attackLevel);
             if (game_ProgressBar_player2.getProgress() < 30)
                 game_ProgressBar_player2.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
             isPlayer_1_Turn = false;
             stepsCountForPlayer1++;
         } else {
+            sound_app.getPig_sound().start();
+
             game_ProgressBar_player1.setProgress(game_ProgressBar_player1.getProgress() - attackLevel);
             if (game_ProgressBar_player1.getProgress() < 30)
                 game_ProgressBar_player1.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
@@ -269,8 +248,10 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
     private void gameEnd() {
 
         Intent intent = new Intent(this, Activity_result.class);
-        //TODO save WINNER + STEPS data
 
+        sound_app.getWin_sound().start();
+
+        // save WINNER + STEPS data
         TopTen top10;
         Gson gson = new Gson();
 
@@ -278,12 +259,10 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
             theWinner = player_1.getName();
             intent.putExtra(Activity_result.STEPS_NUMBER,stepsCountForPlayer1);
             top10 = new TopTen(33.33,-13.52,System.currentTimeMillis(),stepsCountForPlayer1);
-            Log.d("ptt","Befor add " + scoresArrayListPlayer_1.size());
             scoresArrayListPlayer_1.add(top10);
-            Log.d("ptt","AFter add " + scoresArrayListPlayer_1.size());
             player_1.setScores(scoresArrayListPlayer_1);
             String json = gson.toJson(player_1);
-            mySP.putString(PLAYER_1,json);
+            mySP.putString(PLAYER_1_NAME,json);
         }
         else {
             theWinner = player_2.getName();
@@ -292,12 +271,14 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
             scoresArrayListPlayer_2.add(top10);
             player_2.setScores(scoresArrayListPlayer_2);
             String json = gson.toJson(player_2);
-            mySP.putString(PLAYER_2,json);
+            mySP.putString(PLAYER_2_NAME,json);
         }
         intent.putExtra(Activity_result.WINNER_NAME,theWinner);
+        intent.putExtra(Start_game_page.PREVIOUS_ACTIVITY_NAME,ACTIVITY_NAME);
         isGameOver = true;
 
         startActivity(intent);
+        sound_app.getWin_sound().stop();
         finish();
         }
 
@@ -313,22 +294,18 @@ public class Game_Activity extends AppCompatActivity implements CallBack_GameAct
 
         }
 
-        public void getRollDice(){
-
-        }
-
     @Override
     public void rollResult(int r1, int r2) {
-        if(r1 > r2)
+        if(r1 > r2) {
             isPlayer_1_Turn = true;
-        else
+            Toast.makeText(this, player_1.getName() +" begin", Toast.LENGTH_LONG).show();
+        }
+        else {
             isPlayer_1_Turn = false;
-
-        Log.d("ptt","r1 = "+ r1+"r2 = "+r2);
-
+            Toast.makeText(this, player_2.getName() +" begin", Toast.LENGTH_LONG).show();
+        }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().hide(roll);
         transaction.commit();
-        Log.d("ptt","start =  "+ start);
         startTheGame();
     }
 }
